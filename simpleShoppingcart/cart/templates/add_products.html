@@ -8,20 +8,21 @@
 </div><br><br>
 
 <div class="container">
-<form action="" method="POST" class="d-inline">    
+<form method="POST" autocomplete="off">  
+        {% csrf_token %}
         {{form.product_name|as_crispy_field}}
         {{form.product_description|as_crispy_field}}
 
         <div class="row">
             <div class="col-md-4">{{form.product_price|as_crispy_field}}</div>
-            <div class="col-md-4 ">{{form.product_img|as_crispy_field}}</div>
+          
         </div>
         <div class="row">
             <div class="col-md-4">
-                <input type="submit" value="Add">
+                <button class="btn btn-lg btn-primary" type="Submit">Add</button>
             </div>
             <div class="col-md-4">
-                <a href="{% url 'display_items' %}">Back To Home</a>
+                <a href="{% url 'display_items' %}" class="btn btn-secondary btn-lg">Back To Home</a>
             </div>
         </div>
 
