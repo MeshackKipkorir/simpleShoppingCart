@@ -1,7 +1,9 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login,authenticate
-from .models import AddProductModel,AddToCartModel
+from .models import AddProductModel,AddToCartModel,Profile,Order,OrderItem
 from .forms import addProductForm,SignUpForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 def signup(request):
@@ -43,3 +45,21 @@ def add_product(request):
         
     
     return render(request,'add_products.html',{'form':form})
+
+@login_required
+def add_to_cart(request,**kwargs):
+    user_profile = get_object_or_404(Profile, user=request.user)
+    product = [AddProductModel.objects.filter(id=kwargs.get('item_id',"")).first()]
+    if product in request.user.profile.ordered_products.all():
+        messages.info(request, 'Product already added to cart')
+        return redirect('display_items')
+    #create order item
+    order_item,status = OrderItem.objects.get_or_create(product=product)
+    #create order
+    user_order,status = Order.objects.get_or_create(owner=user_profile)
+    user_order.items.add(order_item)
+    if status:
+        user_order.ref_code = generate_order_id()
+        user_order.save()
+    messages.info(request,'item added to cart')
+    return redirect('display_items')
