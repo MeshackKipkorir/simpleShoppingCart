@@ -41,7 +41,7 @@ class OrderItem(models.Model):
     date_ordered = models.DateTimeField(null=True)
 
     def __str__(self):
-        return self.product.name
+        return self.product.product_name
 
 class Order(models.Model):
     ref_code = models.CharField(max_length=15)    
