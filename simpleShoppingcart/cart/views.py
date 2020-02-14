@@ -32,8 +32,11 @@ def display_items(request):
     return render(request,'display_items.html',context)
 
 def display_cart(request):
+        user_profile = get_object_or_404(Profile, user=request.user)
 
-    return render(request,'display_cart.html',{})
+        items = Order.objects.filter(owner = user_profile)
+        
+        return render(request,'display_cart.html',{'items':items})
 
 def add_product(request):
     form = addProductForm()
@@ -49,7 +52,7 @@ def add_product(request):
 @login_required
 def add_to_cart(request,**kwargs):
     user_profile = get_object_or_404(Profile, user=request.user)
-    product = [AddProductModel.objects.filter(id=kwargs.get('item_id',"")).first()]
+    product = AddProductModel.objects.filter(id=kwargs.get('item_id',"")).first()
     if product in request.user.profile.ordered_products.all():
         messages.info(request, 'Product already added to cart')
         return redirect('display_items')
@@ -59,7 +62,7 @@ def add_to_cart(request,**kwargs):
     user_order,status = Order.objects.get_or_create(owner=user_profile)
     user_order.items.add(order_item)
     if status:
-        user_order.ref_code = generate_order_id()
+        # user_order.ref_code = generate_order_id()
         user_order.save()
     messages.info(request,'item added to cart')
-    return redirect('display_items')
+    return redirect('display_cart')

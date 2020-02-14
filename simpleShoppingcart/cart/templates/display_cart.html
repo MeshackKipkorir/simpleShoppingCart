@@ -17,23 +17,17 @@
     </tr>
   </thead>
   <tbody>
+  {% for item  in items %}
+   
     <tr>
       <th scope="row">1</th>
-      <td>Product </td>
-      <td>product description</td>
-      <td>15.0/=</td>
+      <td>{{item.items}}</td>
+      <td>{{item.product_description}}</td>
+      <td>{{item.product_price}}</td>
     </tr>
-   <tr>
-      <th scope="row">1</th>
-      <td>Product </td>
-      <td>product description</td>
-      <td>15.0/=</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Continue To CheckOut</td>
-      <td>Total : 30 /=</td>
-    </tr>
+   
+  {% endfor %}
+ 
   </tbody>
 </table>
 </div>
